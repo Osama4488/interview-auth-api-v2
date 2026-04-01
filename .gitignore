@@ -1,0 +1,24 @@
+# deps & build
+node_modules/
+dist/
+coverage/
+.tmp/
+.cache/
+
+# env & secrets
+.env
+.env.*
+!.env.example
+
+# logs & runtime
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.DS_Store
+
+# uploads/temp
+uploads/
+tmp/
