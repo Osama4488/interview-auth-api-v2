@@ -20,7 +20,7 @@ export const env = {
   jwtRefreshSecret: required("JWT_REFRESH_SECRET"),
   accessTtl: (process.env.ACCESS_TOKEN_TTL ?? "2h") as StringValue,
   refreshTtl: (process.env.REFRESH_TOKEN_TTL ?? "30d") as StringValue,
-   resendApiKey: required("RESEND_API_KEY"),       // 👈 require it
+  resendApiKey: required("RESEND_API_KEY"),       // 👈 require it
   mailFrom: required("MAIL_FROM"),   
   cookieSecure: String(process.env.COOKIE_SECURE ?? "false") === "true",
   otpEnabled: String(process.env.OTP_ENABLED ?? "true") === "true",
