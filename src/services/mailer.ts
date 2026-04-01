@@ -1,24 +1,30 @@
-// src/services/mailer.ts
 import { Resend } from "resend";
 import { env } from "../config/env";
 
 const isProd = process.env.NODE_ENV === "production";
 
-// Only initialize Resend in production.
-// In dev, you can keep your flow working without relying on email provider delivery.
-const resend = isProd ? new Resend(env.resendApiKey) : null;
-
 export async function sendOtpEmail(to: string, otp: string) {
-  // ✅ DEV MODE: let users use maildrop/mailsac/anything, and just print OTP.
-  if (!isProd) {
-    console.log(`✅ DEV OTP for ${to}: ${otp} (valid 5 min)`);
-    console.log(`(If you're using maildrop.cc, inbox is public. Use only for testing.)`);
+  // If OTP is disabled, do nothing.
+  if (!env.otpEnabled) {
+    console.log("OTP is disabled. Skipping email send.");
     return;
   }
 
-  // ✅ PROD MODE: send real email
-  const { data, error } = await resend!.emails.send({
-    from: env.mailFrom, // must be a verified sender/domain in Resend for real sending
+  // In dev, print OTP instead of sending email.
+  if (!isProd) {
+    console.log(`DEV OTP for ${to}: ${otp} (valid 5 min)`);
+    return;
+  }
+
+  // At this point OTP is enabled, so these must exist.
+  if (!env.resendApiKey || !env.mailFrom) {
+    throw new Error("Missing email configuration for OTP delivery");
+  }
+
+  const resend = new Resend(env.resendApiKey);
+
+  const { data, error } = await resend.emails.send({
+    from: env.mailFrom,
     to,
     subject: "Your OTP Code",
     html: `<p>Your OTP is: <b>${otp}</b>. It expires in 5 minutes.</p>`,
