@@ -1,6 +1,6 @@
 // src/services/mailer.ts
 import { Resend } from "resend";
-import { env } from "@config/env";
+import { env } from "../config/env";
 
 const isProd = process.env.NODE_ENV === "production";
 
